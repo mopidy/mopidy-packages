@@ -1,9 +1,14 @@
+import os
+
 import flask
+from flask.ext.sqlalchemy import SQLAlchemy
 
 
 app = flask.Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+
+db = SQLAlchemy(app)
 
 
-@app.route('/')
-def hello():
-    return 'Hello, world!'
+from . import models  # noqa: Import models to register them
+from . import views  # noqa: Import views to register them
