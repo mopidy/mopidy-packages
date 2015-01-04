@@ -1,0 +1,17 @@
+{
+  "id": "mopidy-spotify",
+  "name": "Mopidy-Spotify",
+  "homepage": "https://github.com/mopidy/mopidy-spotify",
+  "bugs": "https://github.com/mopidy/mopidy-spotify/issues",
+  "license": "Apache-2.0",
+  "project_lead": "jodal",
+  "is_extension": true,
+  "distribution": {
+    "github": "mopidy/mopidy-spotify",
+    "pypi": "Mopidy-Spotify",
+    "apt": "mopidy-spotify",
+    "aur": "mopidy-spotify",
+    "homebrew": "mopidy/mopidy/mopidy-spotify"
+  },
+  "status": "active"
+}
