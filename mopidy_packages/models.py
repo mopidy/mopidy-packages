@@ -20,9 +20,7 @@ class Model:
 
     @classmethod
     def all(cls):
-        for path in cls.DIR.glob(cls.DATA_GLOB):
-            if path == cls.SCHEMA_FILE:
-                continue
+        for path in cls.DATA_DIR.glob(cls.DATA_GLOB):
             obj = cls(path=path)
             if obj.data is not None:
                 yield obj
@@ -32,7 +30,7 @@ class Model:
 
         if id is not None:
             self.id = id
-            self.path = self.DIR / (self.DATA_FORMAT % id)
+            self.path = self.DATA_DIR / (self.DATA_FORMAT % id)
         else:
             self.id = None
             self.path = path
@@ -67,14 +65,14 @@ class Model:
 
 
 class Person(Model):
-    DIR = ROOT_DIR / 'people'
+    DATA_DIR = ROOT_DIR / 'data' / 'people'
     DATA_GLOB = '*.json'
     DATA_FORMAT = '%s.json'
-    SCHEMA_FILE = DIR / 'person.schema.json'
+    SCHEMA_FILE = ROOT_DIR / 'schemas' / 'person.schema.json'
 
 
 class Project(Model):
-    DIR = ROOT_DIR / 'projects'
+    DATA_DIR = ROOT_DIR / 'data' / 'projects'
     DATA_GLOB = '*/project.json'
     DATA_FORMAT = '%s/project.json'
-    SCHEMA_FILE = DIR / 'projects.schema.json'
+    SCHEMA_FILE = ROOT_DIR / 'schemas' / 'projects.schema.json'
