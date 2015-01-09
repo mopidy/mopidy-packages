@@ -23,21 +23,23 @@ class Model:
         for path in cls.DIR.glob(cls.DATA_GLOB):
             if path == cls.SCHEMA_FILE:
                 continue
-            data = cls._get_data(path)
-            if data is None:
-                continue
-            yield cls(data)
+            obj = cls(path=path)
+            if obj.data is not None:
+                yield obj
 
-    @classmethod
-    def get(cls, name):
-        path = cls.DIR / (cls.DATA_FORMAT % name)
-        data = cls._get_data(path)
-        if data is None:
-            return None
-        return cls(data)
+    def __init__(self, id=None, path=None):
+        assert id or path
 
-    @classmethod
-    def _get_data(cls, path):
+        if id is not None:
+            self.id = id
+            self.path = self.DIR / (self.DATA_FORMAT % id)
+        else:
+            self.id = None
+            self.path = path
+
+        self.data = self._get_data(self.path)
+
+    def _get_data(self, path):
         if not path.exists():
             return None
 
@@ -46,7 +48,7 @@ class Model:
 
         try:
             jsonschema.validate(
-                data, cls._get_schema(),
+                data, self.get_schema(),
                 format_checker=jsonschema.FormatChecker())
         except jsonschema.ValidationError as exc:
             raise ModelException('Invalid JSON structure: %s' % exc) from exc
@@ -54,14 +56,11 @@ class Model:
             return data
 
     @classmethod
-    def _get_schema(cls):
+    def get_schema(cls):
         if cls._schema_cache is None:
             with cls.SCHEMA_FILE.open() as fh:
                 cls._schema_cache = json.load(fh)
         return cls._schema_cache
-
-    def __init__(self, data):
-        self.data = data
 
     def to_json(self):
         return self.data

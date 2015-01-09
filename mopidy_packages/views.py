@@ -49,11 +49,11 @@ def get_person(name):
     """Returns detailed information about a specific person"""
 
     try:
-        person = models.Person.get(name)
+        person = models.Person(id=name)
     except models.ModelException as exc:
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
-    if person is None:
+    if person.data is None:
         flask.abort(404)
 
     return flask.jsonify(person.to_json())
@@ -78,11 +78,11 @@ def get_project(name):
     """Returns detailed information about a specific project"""
 
     try:
-        project = models.Project.get(name)
+        project = models.Project(id=name)
     except models.ModelException as exc:
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
-    if project is None:
+    if project.data is None:
         flask.abort(404)
 
     return flask.jsonify(project.to_json())
