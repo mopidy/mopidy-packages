@@ -4,7 +4,7 @@
   "homepage": "https://github.com/mopidy/mopidy-spotify",
   "bugs": "https://github.com/mopidy/mopidy-spotify/issues",
   "license": "Apache-2.0",
-  "project_lead": "jodal",
+  "maintainers": ["jodal"],
   "is_extension": true,
   "distribution": {
     "github": "mopidy/mopidy-spotify",

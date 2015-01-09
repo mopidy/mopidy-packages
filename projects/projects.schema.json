@@ -26,9 +26,14 @@
       "type": "string",
       "description": "License identifier from http://spdx.org/licenses/"
     },
-    "project_lead": {
-      "type": "string",
-      "description": "Reference to a person, as defined in people/<person>.json"
+    "maintainers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Reference to a person, as defined in people/<person>.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
     },
     "is_extension": {
       "type": "boolean",
@@ -71,7 +76,7 @@
     "name",
     "homepage",
     "license",
-    "project_lead",
+    "maintainers",
     "distribution"
   ]
 }
