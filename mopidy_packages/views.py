@@ -36,7 +36,7 @@ def list_people():
     """Returns a list of people in the Mopidy community"""
 
     try:
-        people = [p.to_json() for p in models.Person.all()]
+        people = [p.data for p in models.Person.all()]
     except models.ModelException as exc:
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
@@ -56,7 +56,7 @@ def get_person(name):
     if person.data is None:
         flask.abort(404)
 
-    return flask.jsonify(person.to_json())
+    return flask.jsonify(person.data)
 
 
 @api_endpoint
@@ -65,7 +65,7 @@ def list_projects():
     """Returns a list of projects in the Mopidy ecosystem"""
 
     try:
-        projects = [p.to_json() for p in models.Project.all()]
+        projects = [p.data for p in models.Project.all()]
     except models.ModelException as exc:
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
@@ -85,4 +85,4 @@ def get_project(name):
     if project.data is None:
         flask.abort(404)
 
-    return flask.jsonify(project.to_json())
+    return flask.jsonify(project.data)

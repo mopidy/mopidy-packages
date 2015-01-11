@@ -60,9 +60,6 @@ class Model:
                 cls._schema_cache = json.load(fh)
         return cls._schema_cache
 
-    def to_json(self):
-        return self.data
-
 
 class Person(Model):
     DATA_DIR = ROOT_DIR / 'data' / 'people'
