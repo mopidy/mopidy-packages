@@ -50,7 +50,7 @@ def test_person_enrich():
 
     person.enrich()
 
-    assert person.data['github']['user'] == 'jodal'
+    assert person.data['github']['username'] == 'jodal'
     assert person.data['github']['url'] == 'https://github.com/jodal'
 
 
@@ -59,7 +59,7 @@ def test_add_github_profile():
 
     result = models.add_github_profile(data)
 
-    assert result['user'] == 'alice'
+    assert result['username'] == 'alice'
     assert result['url'] == 'https://github.com/alice'
 
 
@@ -72,7 +72,7 @@ def test_add_twitter_profile():
 
     result = models.add_twitter_profile(data)
 
-    assert result['user'] == 'alice'
+    assert result['username'] == 'alice'
     assert result['url'] == 'https://twitter.com/alice'
 
 
@@ -94,7 +94,7 @@ def test_add_discuss_profile():
 
     result = models.add_discuss_profile(data)
 
-    assert result['user'] == 'alice'
+    assert result['username'] == 'alice'
     assert result['url'] == 'https://discuss.mopidy.com/users/alice'
     assert result['last_posted_at'] == '123'
     assert result['last_seen_at'] == '456'
@@ -110,7 +110,7 @@ def test_add_discuss_profile_with_failing_service():
 
     result = models.add_discuss_profile(data)
 
-    assert result['user'] == 'alice'
+    assert result['username'] == 'alice'
     assert result['url'] == 'https://discuss.mopidy.com/users/alice'
     assert result['last_posted_at'] is None
     assert result['last_seen_at'] is None

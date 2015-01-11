@@ -91,35 +91,35 @@ class Project(Model):
 
 @Person.enricher('github')
 def add_github_profile(data):
-    user = data.get('github')
-    if user is None:
+    username = data.get('github')
+    if username is None:
         return
     return {
-        'user': user,
-        'url': 'https://github.com/%s' % user,
+        'username': username,
+        'url': 'https://github.com/%s' % username,
     }
 
 
 @Person.enricher('twitter')
 def add_twitter_profile(data):
-    user = data.get('twitter')
-    if user is None:
+    username = data.get('twitter')
+    if username is None:
         return
     return {
-        'user': user,
-        'url': 'https://twitter.com/%s' % user,
+        'username': username,
+        'url': 'https://twitter.com/%s' % username,
     }
 
 
 @Person.enricher('discuss')
 def add_discuss_profile(data):
-    user = data.get('discuss')
-    if user is None:
+    username = data.get('discuss')
+    if username is None:
         return
 
-    url = 'https://discuss.mopidy.com/users/%s' % user
+    url = 'https://discuss.mopidy.com/users/%s' % username
     result = {
-        'user': user,
+        'username': username,
         'url': url,
         'last_posted_at': None,
         'last_seen_at': None,
