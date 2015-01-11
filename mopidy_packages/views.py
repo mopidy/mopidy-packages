@@ -56,6 +56,8 @@ def get_person(name):
     if person.data is None:
         flask.abort(404)
 
+    person.enrich()
+
     return flask.jsonify(person.data)
 
 

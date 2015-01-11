@@ -4,6 +4,8 @@ import pathlib
 
 import jsonschema
 
+import requests
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +19,14 @@ class ModelException(Exception):
 
 class Model:
     _schema_cache = None
+    _enrichers = {}
+
+    @classmethod
+    def enricher(cls, key):
+        def inner(func):
+            cls._enrichers[key] = func
+            return func
+        return inner
 
     @classmethod
     def all(cls):
@@ -60,6 +70,10 @@ class Model:
                 cls._schema_cache = json.load(fh)
         return cls._schema_cache
 
+    def enrich(self):
+        for key, enricher in self._enrichers.items():
+            self.data[key] = enricher(self.data)
+
 
 class Person(Model):
     DATA_DIR = ROOT_DIR / 'data' / 'people'
@@ -73,3 +87,77 @@ class Project(Model):
     DATA_GLOB = '*/project.json'
     DATA_FORMAT = '%s/project.json'
     SCHEMA_FILE = ROOT_DIR / 'schemas' / 'projects.schema.json'
+
+
+@Person.enricher('github')
+def add_github_profile(data):
+    user = data.get('github')
+    if user is None:
+        return
+    return {
+        'user': user,
+        'url': 'https://github.com/%s' % user,
+    }
+
+
+@Person.enricher('twitter')
+def add_twitter_profile(data):
+    user = data.get('twitter')
+    if user is None:
+        return
+    return {
+        'user': user,
+        'url': 'https://twitter.com/%s' % user,
+    }
+
+
+@Person.enricher('discuss')
+def add_discuss_profile(data):
+    user = data.get('discuss')
+    if user is None:
+        return
+
+    url = 'https://discuss.mopidy.com/users/%s' % user
+    result = {
+        'user': user,
+        'url': url,
+        'last_posted_at': None,
+        'last_seen_at': None,
+    }
+
+    response = requests.get(url + '.json')
+    if response.status_code != 200:
+        return result
+
+    discuss = response.json()
+    result['last_posted_at'] = discuss.get('user').get('last_posted_at')
+    result['last_seen_at'] = discuss.get('user').get('last_seen_at')
+    return result
+
+
+@Person.enricher('gravatar')
+def add_gravatar(data):
+    import hashlib
+    import urllib.parse
+
+    def gravatar_url(email, size=None, default=None):
+        params = {}
+        if size is not None:
+            params['s'] = str(size)
+        if default is not None:
+            params['d'] = default
+
+        return (
+            'http://www.gravatar.com/avatar/' +
+            hashlib.md5(email.lower()).hexdigest() +
+            '?' + urllib.parse.urlencode(params)
+        )
+
+    email = data.get('email', 'default').encode('utf-8')
+
+    return {
+        'base': gravatar_url(email),
+        'large': gravatar_url(email, size=460, default='mm'),
+        'medium': gravatar_url(email, size=200, default='mm'),
+        'small': gravatar_url(email, size=80, default='mm'),
+    }
