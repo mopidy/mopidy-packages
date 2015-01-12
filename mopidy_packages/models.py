@@ -221,3 +221,35 @@ def add_gravatar(data):
         'medium': gravatar_url(email, size=200, default='mm'),
         'small': gravatar_url(email, size=80, default='mm'),
     }
+
+
+@Project.enricher('distribution.pypi')
+def add_pypi_info(data):
+    id = data['distribution'].get('pypi')
+    if id is None:
+        return
+
+    url = 'https://pypi.python.org/pypi/%s' % id
+    result = {
+        'id': id,
+        'url': url,
+    }
+
+    response = requests.get(url + '/json')
+    if response.status_code != 200:
+        return result
+
+    pypi = response.json()
+    result['author'] = pypi['info']['author']
+    result['author_email'] = pypi['info']['author_email']
+    result['version'] = pypi['info']['version']
+    result['downloads'] = pypi['info']['downloads']
+    result['requires_dist'] = pypi['info']['requires_dist']
+    result['has_wheel'] = any(
+        url['packagetype'] == 'bdist_wheel' for url in pypi['urls'])
+    if pypi['urls']:
+        result['released_at'] = '%sZ' % pypi['urls'][0]['upload_time']
+    else:
+        result['released_at'] = None
+
+    return result

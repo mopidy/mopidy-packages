@@ -122,3 +122,72 @@ def test_add_github_repo_with_working_service():
 
 def test_add_github_repo_without_input():
     assert models.add_github_repo({'distribution': {}}) is None
+
+
+@responses.activate
+def test_add_pypi_info_with_failing_service():
+    responses.add(
+        responses.GET, 'https://pypi.python.org/pypi/Mopidy-Spotify/json',
+        status=404)
+
+    data = {'distribution': {'pypi': 'Mopidy-Spotify'}}
+
+    result = models.add_pypi_info(data)
+
+    assert result['id'] == 'Mopidy-Spotify'
+    assert result['url'] == 'https://pypi.python.org/pypi/Mopidy-Spotify'
+
+
+@responses.activate
+def test_add_pypi_info_with_working_service():
+    responses.add(
+        responses.GET, 'https://pypi.python.org/pypi/Mopidy-Spotify/json',
+        body=json.dumps({
+            'info': {
+                'author': 'Stein Magnus Jodal',
+                'author_email': 'stein.magnus@jodal.no',
+                'version': '1.2.0',
+                'downloads': {
+                    'last_month': 1695,
+                    'last_week': 608,
+                    'last_day': 50,
+                },
+                'requires_dist': [
+                    'Pykka (>=1.1)',
+                    'Mopidy (>=0.18)',
+                ],
+            },
+            'urls': [
+                {
+                    'upload_time': '2014-07-21T00:04:04',
+                    'packagetype': 'sdist'
+                },
+                {
+                    'upload_time': '2014-08-03T13:15:45',
+                    'packagetype': 'bdist_wheel'
+                },
+            ]
+        }),
+        status=200, content_type='application/json')
+
+    data = {'distribution': {'pypi': 'Mopidy-Spotify'}}
+
+    result = models.add_pypi_info(data)
+
+    assert result['id'] == 'Mopidy-Spotify'
+    assert result['url'] == 'https://pypi.python.org/pypi/Mopidy-Spotify'
+    assert result['author'] == 'Stein Magnus Jodal'
+    assert result['author_email'] == 'stein.magnus@jodal.no'
+    assert result['version'] == '1.2.0'
+    assert result['released_at'] == '2014-07-21T00:04:04Z'
+    assert result['downloads'] == {
+        'last_month': 1695,
+        'last_week': 608,
+        'last_day': 50,
+    }
+    assert result['requires_dist'] == ['Pykka (>=1.1)', 'Mopidy (>=0.18)']
+    assert result['has_wheel'] is True
+
+
+def test_add_pypi_info_without_input():
+    assert models.add_pypi_info({'distribution': {}}) is None
