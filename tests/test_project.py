@@ -91,6 +91,15 @@ def test_add_github_repo_with_working_service():
             'open_issues_count': 15,
         }),
         status=200, content_type='application/json')
+    responses.add(
+        responses.GET,
+        'https://api.github.com/repos/mopidy/mopidy-spotify/tags',
+        body=json.dumps([
+            {'name': 'v1.2.0'},
+            {'name': 'v1.1.3'},
+            {'name': 'debian/v1.2.0-1'},
+        ]),
+        status=200, content_type='application/json')
 
     data = {'distribution': {'github': 'mopidy/mopidy-spotify'}}
 
@@ -107,6 +116,7 @@ def test_add_github_repo_with_working_service():
     assert result['stargazers_count'] == 72
     assert result['forks_count'] == 22
     assert result['open_issues_count'] == 15
+    assert result['tags'] == ['v1.2.0', 'v1.1.3']
 
 
 def test_add_github_repo_without_input():

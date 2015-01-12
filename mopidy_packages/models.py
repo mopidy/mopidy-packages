@@ -1,6 +1,7 @@
 import json
 import logging
 import pathlib
+from distutils import version
 
 import jsonschema
 
@@ -138,7 +139,23 @@ def add_github_repo(data):
     result['forks_count'] = github['forks_count']
     result['open_issues_count'] = github['open_issues_count']
 
+    result['tags'] = list(get_github_tags(id))
     return result
+
+
+def get_github_tags(id):
+    response = requests.get('https://api.github.com/repos/%s/tags' % id)
+    if response.status_code != 200:
+        return
+
+    for tag_obj in response.json():
+        tag = tag_obj['name']
+        try:
+            version.StrictVersion(tag.lstrip('v'))
+        except ValueError:
+            continue
+        else:
+            yield tag
 
 
 @Person.enricher('twitter')
