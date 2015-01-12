@@ -109,7 +109,7 @@ def add_github_profile(data):
     }
 
 
-@Project.enricher('distribution.github')
+@Project.enricher('github')
 def add_github_repo(data):
     id = data['distribution'].get('github')
     if id is None:
@@ -223,7 +223,7 @@ def add_gravatar(data):
     }
 
 
-@Project.enricher('distribution.pypi')
+@Project.enricher('pypi')
 def add_pypi_info(data):
     id = data['distribution'].get('pypi')
     if id is None:
