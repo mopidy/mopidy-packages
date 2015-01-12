@@ -157,6 +157,11 @@ def test_add_pypi_info_with_working_service():
                     'Mopidy (>=0.18)',
                 ],
             },
+            'releases': {
+                '1.1.1': {},
+                '1.1.0': {},
+                '1.2.0': {},
+            },
             'urls': [
                 {
                     'upload_time': '2014-07-21T00:04:04',
@@ -187,6 +192,7 @@ def test_add_pypi_info_with_working_service():
     }
     assert result['requires_dist'] == ['Pykka (>=1.1)', 'Mopidy (>=0.18)']
     assert result['has_wheel'] is True
+    assert result['releases'] == ['1.2.0', '1.1.1', '1.1.0']
 
 
 def test_add_pypi_info_without_input():

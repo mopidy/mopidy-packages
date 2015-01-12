@@ -5,6 +5,8 @@ from distutils import version
 
 import jsonschema
 
+from natsort import natsorted
+
 import requests
 
 
@@ -247,6 +249,9 @@ def add_pypi_info(data):
     result['requires_dist'] = pypi['info']['requires_dist']
     result['has_wheel'] = any(
         url['packagetype'] == 'bdist_wheel' for url in pypi['urls'])
+
+    result['releases'] = list(reversed(natsorted(pypi['releases'].keys())))
+
     if pypi['urls']:
         result['released_at'] = '%sZ' % pypi['urls'][0]['upload_time']
     else:
