@@ -72,7 +72,12 @@ class Model:
 
     def enrich(self):
         for key, enricher in self._enrichers.items():
-            self.data[key] = enricher(self.data)
+            obj = self.data
+            parts = key.split('.')
+            parts, last = parts[:-1], parts[-1]
+            for part in parts:
+                obj = obj[part]
+            obj[last] = enricher(self.data)
 
 
 class Person(Model):
@@ -98,6 +103,39 @@ def add_github_profile(data):
         'username': username,
         'url': 'https://github.com/%s' % username,
     }
+
+
+@Project.enricher('distribution.github')
+def add_github_repo(data):
+    id = data['distribution'].get('github')
+    if id is None:
+        return
+
+    owner, repo = id.split('/', 1)
+    result = {
+        'id': id,
+        'owner': owner,
+        'repo': repo,
+        'url': 'https://github.com/%s' % id,
+    }
+
+    response = requests.get('https://api.github.com/repos/%s' % id)
+    if response.status_code != 200:
+        return result
+
+    github = response.json()
+    result['created_at'] = github['created_at']
+    result['pushed_at'] = github['pushed_at']
+    result['updated_at'] = github['updated_at']
+    result['description'] = github['description']
+    result['homepage'] = github['homepage']
+    result['language'] = github['language']
+    result['watchers_count'] = github['watchers_count']
+    result['stargazers_count'] = github['stargazers_count']
+    result['forks_count'] = github['forks_count']
+    result['open_issues_count'] = github['open_issues_count']
+
+    return result
 
 
 @Person.enricher('twitter')
