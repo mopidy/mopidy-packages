@@ -87,4 +87,6 @@ def get_project(name):
     if project.data is None:
         flask.abort(404)
 
+    project.enrich()
+
     return flask.jsonify(project.data)
