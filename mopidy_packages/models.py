@@ -19,7 +19,6 @@ class ModelException(Exception):
 
 class Model:
     _schema_cache = None
-    _enrichers = {}
 
     @classmethod
     def enricher(cls, key):
@@ -86,12 +85,16 @@ class Person(Model):
     DATA_FORMAT = '%s.json'
     SCHEMA_FILE = ROOT_DIR / 'schemas' / 'person.schema.json'
 
+    _enrichers = {}
+
 
 class Project(Model):
     DATA_DIR = ROOT_DIR / 'data' / 'projects'
     DATA_GLOB = '*/project.json'
     DATA_FORMAT = '%s/project.json'
     SCHEMA_FILE = ROOT_DIR / 'schemas' / 'projects.schema.json'
+
+    _enrichers = {}
 
 
 @Person.enricher('github')
