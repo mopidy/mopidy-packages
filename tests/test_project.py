@@ -117,6 +117,7 @@ def test_add_github_repo_with_working_service():
     assert result['forks_count'] == 22
     assert result['open_issues_count'] == 15
     assert result['tags'] == ['v1.2.0', 'v1.1.3']
+    assert result['latest_tag'] == 'v1.2.0'
 
 
 def test_add_github_repo_without_input():

@@ -140,6 +140,8 @@ def add_github_repo(data):
     result['open_issues_count'] = github['open_issues_count']
 
     result['tags'] = list(get_github_tags(id))
+    result['latest_tag'] = result['tags'] and result['tags'][0] or None
+
     return result
 
 
