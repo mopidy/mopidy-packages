@@ -85,7 +85,7 @@ def test_add_github_repo_with_working_service():
             'description': 'Describing text',
             'homepage': 'www.mopidy.com',
             'language': 'Python',
-            'watchers_count': 21,
+            'subscribers_count': 21,
             'stargazers_count': 72,
             'forks_count': 22,
             'open_issues_count': 15,

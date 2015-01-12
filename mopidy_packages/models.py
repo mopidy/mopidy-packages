@@ -133,7 +133,7 @@ def add_github_repo(data):
     result['description'] = github['description']
     result['homepage'] = github['homepage']
     result['language'] = github['language']
-    result['watchers_count'] = github['watchers_count']
+    result['watchers_count'] = github['subscribers_count']
     result['stargazers_count'] = github['stargazers_count']
     result['forks_count'] = github['forks_count']
     result['open_issues_count'] = github['open_issues_count']
