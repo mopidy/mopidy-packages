@@ -24,3 +24,6 @@ notifications:
     on_failure: change
     use_notice: true
     skip_join: true
+
+# Enable use of new faster Travis CI infrastructure
+sudo: false
