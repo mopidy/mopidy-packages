@@ -103,7 +103,7 @@ class Project(Model):
 
 @Person.enricher('github')
 def add_github_profile(data):
-    username = data.get('github')
+    username = data['profiles'].get('github')
     if username is None:
         return
     return {
@@ -171,7 +171,7 @@ def get_github_tags(id):
 
 @Person.enricher('twitter')
 def add_twitter_profile(data):
-    username = data.get('twitter')
+    username = data['profiles'].get('twitter')
     if username is None:
         return
     return {
@@ -183,7 +183,7 @@ def add_twitter_profile(data):
 
 @Person.enricher('discuss')
 def add_discuss_profile(data):
-    username = data.get('discuss')
+    username = data['profiles'].get('discuss')
     if username is None:
         return
 

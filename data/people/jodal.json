@@ -3,8 +3,10 @@
   "name": "Stein Magnus Jodal",
   "email": "stein.magnus@jodal.no",
   "homepage": "http://jodal.no",
-  "github": "jodal",
-  "twitter": "jodal",
-  "freenode": "jodal",
-  "discuss": "jodal"
+  "profiles": {
+    "github": "jodal",
+    "twitter": "jodal",
+    "freenode": "jodal",
+    "discuss": "jodal"
+  }
 }

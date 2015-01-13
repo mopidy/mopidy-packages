@@ -46,7 +46,7 @@ def test_person_enrich():
     person = models.Person(id='jodal')
     person._enrichers = {'github': models.add_github_profile}
 
-    assert person.data['github'] == 'jodal'
+    assert person.data['profiles']['github'] == 'jodal'
 
     person.enrich()
 
@@ -55,7 +55,7 @@ def test_person_enrich():
 
 
 def test_add_github_profile():
-    data = {'github': 'alice'}
+    data = {'profiles': {'github': 'alice'}}
 
     result = models.add_github_profile(data)
 
@@ -65,11 +65,11 @@ def test_add_github_profile():
 
 
 def test_add_github_profile_without_input():
-    assert models.add_github_profile({}) is None
+    assert models.add_github_profile({'profiles': {}}) is None
 
 
 def test_add_twitter_profile():
-    data = {'twitter': 'alice'}
+    data = {'profiles': {'twitter': 'alice'}}
 
     result = models.add_twitter_profile(data)
 
@@ -79,7 +79,7 @@ def test_add_twitter_profile():
 
 
 def test_add_twitter_profile_without_input():
-    assert models.add_twitter_profile({}) is None
+    assert models.add_twitter_profile({'profiles': {}}) is None
 
 
 @responses.activate
@@ -92,7 +92,7 @@ def test_add_discuss_profile_with_working_service():
         }}),
         status=200, content_type='application/json')
 
-    data = {'discuss': 'alice'}
+    data = {'profiles': {'discuss': 'alice'}}
 
     result = models.add_discuss_profile(data)
 
@@ -109,7 +109,7 @@ def test_add_discuss_profile_with_failing_service():
         responses.GET, 'https://discuss.mopidy.com/users/alice.json',
         status=404)
 
-    data = {'discuss': 'alice'}
+    data = {'profiles': {'discuss': 'alice'}}
 
     result = models.add_discuss_profile(data)
 
@@ -119,7 +119,7 @@ def test_add_discuss_profile_with_failing_service():
 
 
 def test_add_discuss_profile_without_input():
-    assert models.add_discuss_profile({}) is None
+    assert models.add_discuss_profile({'profiles': {}}) is None
 
 
 def test_add_gravatar():
