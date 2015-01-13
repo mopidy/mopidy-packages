@@ -1,5 +1,6 @@
 include *.py
 include *.txt
+include .travis.yml
 include LICENSE
 include MANIFEST.in
 include Procfile
