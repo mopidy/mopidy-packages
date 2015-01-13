@@ -1,7 +1,12 @@
+import os
+
 import flask
 
-from . import app, models
+from mopidy_packages import models
 
+
+app = flask.Flask(__name__)
+app.config['DEBUG'] = 'DEBUG' in os.environ
 
 api_endpoints = []
 
@@ -90,3 +95,7 @@ def get_project(name):
     project.enrich()
 
     return flask.jsonify(project.data)
+
+
+if __name__ == '__main__':
+    app.run()

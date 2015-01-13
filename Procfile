@@ -1,1 +1,1 @@
-web: gunicorn mopidy_packages:app --log-file -
+web: gunicorn mopidy_packages.web:app --log-file -
