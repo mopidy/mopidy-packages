@@ -1,0 +1,17 @@
+{
+  "id": "mopidy-dirble",
+  "name": "Mopidy-Dirble",
+  "homepage": "https://github.com/mopidy/mopidy-dirble",
+  "bugs": "https://github.com/mopidy/mopidy-dirble/issues",
+  "license": "Apache-2.0",
+  "maintainers": ["adamcik"],
+  "is_extension": true,
+  "distribution": {
+    "github": "mopidy/mopidy-dirble",
+    "pypi": "Mopidy-Dirble",
+    "apt": "mopidy-dirble",
+    "aur": "mopidy-dirble",
+    "homebrew": "mopidy/mopidy/mopidy-dirble"
+  },
+  "status": "active"
+}
