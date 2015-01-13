@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import pathlib
@@ -258,3 +259,39 @@ def add_pypi_info(data):
         result['released_at'] = None
 
     return result
+
+
+@Project.enricher('aur')
+def add_aur_info(data):
+    id = data['distribution'].get('aur')
+    if id is None:
+        return
+
+    result = {
+        'id': id,
+        'url': 'https://aur.archlinux.org/packages/%s/' % id,
+    }
+
+    response = requests.get(
+        'https://aur.archlinux.org/rpc.php?type=info&arg=%s' % id)
+    if response.status_code != 200:
+        return result
+
+    aur = response.json()
+    result['description'] = aur['results']['Description']
+    result['homepage'] = aur['results']['URL']
+    result['version'] = aur['results']['Version']
+    result['outdated'] = bool(aur['results']['OutOfDate'])
+    result['vote_count'] = aur['results']['NumVotes']
+    result['maintainer'] = aur['results']['Maintainer']
+    result['created_at'] = unix_to_iso(aur['results']['FirstSubmitted'])
+    result['updated_at'] = unix_to_iso(aur['results']['LastModified'])
+
+    return result
+
+
+def unix_to_iso(unix):
+    return (
+        datetime.datetime
+        .utcfromtimestamp(unix)
+        .strftime('%Y-%m-%dT%H:%M:%SZ'))

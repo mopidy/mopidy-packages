@@ -197,3 +197,60 @@ def test_add_pypi_info_with_working_service():
 
 def test_add_pypi_info_without_input():
     assert models.add_pypi_info({'distribution': {}}) is None
+
+
+@responses.activate
+def test_add_aur_info_with_failing_service():
+    responses.add(
+        responses.GET,
+        'https://aur.archlinux.org/rpc.php?type=info&arg=mopidy-spotify',
+        match_querystring=True, status=404)
+
+    data = {'distribution': {'aur': 'mopidy-spotify'}}
+
+    result = models.add_aur_info(data)
+
+    assert result['id'] == 'mopidy-spotify'
+    assert result['url'] == (
+        'https://aur.archlinux.org/packages/mopidy-spotify/')
+
+
+@responses.activate
+def test_add_aur_info_with_working_service():
+    responses.add(
+        responses.GET,
+        'https://aur.archlinux.org/rpc.php?type=info&arg=mopidy-spotify',
+        match_querystring=True,
+        body=json.dumps({
+            'results': {
+                'Description': 'Some text',
+                'URL': 'http://www.mopidy.com',
+                'Version': '1.2.0-1',
+                'OutOfDate': 0,
+                'NumVotes': 17,
+                'Maintainer': 'AlexandrePTJ',
+                'FirstSubmitted': 1382966658,
+                'LastModified': 1405946340,
+            }
+        }),
+        status=200, content_type='application/json')
+
+    data = {'distribution': {'aur': 'mopidy-spotify'}}
+
+    result = models.add_aur_info(data)
+
+    assert result['id'] == 'mopidy-spotify'
+    assert result['url'] == (
+        'https://aur.archlinux.org/packages/mopidy-spotify/')
+    assert result['description'] == 'Some text'
+    assert result['homepage'] == 'http://www.mopidy.com'
+    assert result['version'] == '1.2.0-1'
+    assert result['outdated'] is False
+    assert result['vote_count'] == 17
+    assert result['maintainer'] == 'AlexandrePTJ'
+    assert result['created_at'] == '2013-10-28T13:24:18Z'
+    assert result['updated_at'] == '2014-07-21T12:39:00Z'
+
+
+def test_add_aur_info_without_input():
+    assert models.add_aur_info({'distribution': {}}) is None
