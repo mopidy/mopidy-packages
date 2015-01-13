@@ -109,6 +109,7 @@ def add_github_profile(data):
     return {
         'username': username,
         'url': 'https://github.com/%s' % username,
+        'sources': [],
     }
 
 
@@ -124,11 +125,15 @@ def add_github_repo(data):
         'owner': owner,
         'repo': repo,
         'url': 'https://github.com/%s' % id,
+        'sources': [],
     }
 
-    response = requests.get('https://api.github.com/repos/%s' % id)
+    api_url = 'https://api.github.com/repos/%s' % id
+    response = requests.get(api_url)
     if response.status_code != 200:
         return result
+
+    result['sources'].append(api_url)
 
     github = response.json()
     result['created_at'] = github['created_at']
@@ -144,6 +149,7 @@ def add_github_repo(data):
 
     result['tags'] = list(get_github_tags(id))
     result['latest_tag'] = result['tags'] and result['tags'][0] or None
+    result['sources'].append(api_url + '/tags')
 
     return result
 
@@ -171,6 +177,7 @@ def add_twitter_profile(data):
     return {
         'username': username,
         'url': 'https://twitter.com/%s' % username,
+        'sources': [],
     }
 
 
@@ -184,13 +191,15 @@ def add_discuss_profile(data):
     result = {
         'username': username,
         'url': url,
-        'last_posted_at': None,
-        'last_seen_at': None,
+        'sources': [],
     }
 
-    response = requests.get(url + '.json')
+    api_url = url + '.json'
+    response = requests.get(api_url)
     if response.status_code != 200:
         return result
+
+    result['sources'].append(api_url)
 
     discuss = response.json()
     result['last_posted_at'] = discuss.get('user').get('last_posted_at')
@@ -223,6 +232,7 @@ def add_gravatar(data):
         'large': gravatar_url(email, size=460, default='mm'),
         'medium': gravatar_url(email, size=200, default='mm'),
         'small': gravatar_url(email, size=80, default='mm'),
+        'sources': [],
     }
 
 
@@ -236,11 +246,15 @@ def add_pypi_info(data):
     result = {
         'id': id,
         'url': url,
+        'sources': [],
     }
 
-    response = requests.get(url + '/json')
+    api_url = url + '/json'
+    response = requests.get(api_url)
     if response.status_code != 200:
         return result
+
+    result['sources'].append(api_url)
 
     pypi = response.json()
     result['author'] = pypi['info']['author']
@@ -270,12 +284,15 @@ def add_aur_info(data):
     result = {
         'id': id,
         'url': 'https://aur.archlinux.org/packages/%s/' % id,
+        'sources': [],
     }
 
-    response = requests.get(
-        'https://aur.archlinux.org/rpc.php?type=info&arg=%s' % id)
+    api_url = 'https://aur.archlinux.org/rpc.php?type=info&arg=%s' % id
+    response = requests.get(api_url)
     if response.status_code != 200:
         return result
+
+    result['sources'].append(api_url)
 
     aur = response.json()
     result['description'] = aur['results']['Description']

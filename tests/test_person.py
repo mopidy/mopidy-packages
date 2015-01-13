@@ -61,6 +61,7 @@ def test_add_github_profile():
 
     assert result['username'] == 'alice'
     assert result['url'] == 'https://github.com/alice'
+    assert result['sources'] == []
 
 
 def test_add_github_profile_without_input():
@@ -74,6 +75,7 @@ def test_add_twitter_profile():
 
     assert result['username'] == 'alice'
     assert result['url'] == 'https://twitter.com/alice'
+    assert result['sources'] == []
 
 
 def test_add_twitter_profile_without_input():
@@ -81,7 +83,7 @@ def test_add_twitter_profile_without_input():
 
 
 @responses.activate
-def test_add_discuss_profile():
+def test_add_discuss_profile_with_working_service():
     responses.add(
         responses.GET, 'https://discuss.mopidy.com/users/alice.json',
         body=json.dumps({'user': {
@@ -98,6 +100,7 @@ def test_add_discuss_profile():
     assert result['url'] == 'https://discuss.mopidy.com/users/alice'
     assert result['last_posted_at'] == '123'
     assert result['last_seen_at'] == '456'
+    assert result['sources'] == ['https://discuss.mopidy.com/users/alice.json']
 
 
 @responses.activate
@@ -112,8 +115,7 @@ def test_add_discuss_profile_with_failing_service():
 
     assert result['username'] == 'alice'
     assert result['url'] == 'https://discuss.mopidy.com/users/alice'
-    assert result['last_posted_at'] is None
-    assert result['last_seen_at'] is None
+    assert result['sources'] == []
 
 
 def test_add_discuss_profile_without_input():
@@ -127,6 +129,7 @@ def test_add_gravatar():
 
     assert result['base'] == (
         'http://www.gravatar.com/avatar/c160f8cc69a4f0bf2b0362752353d060?')
+    assert result['sources'] == []
 
     for k, v in {'small': 80, 'medium': 200, 'large': 460}.items():
         assert result[k].startswith(

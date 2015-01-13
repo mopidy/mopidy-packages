@@ -72,6 +72,7 @@ def test_add_github_repo_with_failing_service():
     assert result['owner'] == 'mopidy'
     assert result['repo'] == 'mopidy-spotify'
     assert result['url'] == 'https://github.com/mopidy/mopidy-spotify'
+    assert result['sources'] == []
 
 
 @responses.activate
@@ -118,6 +119,10 @@ def test_add_github_repo_with_working_service():
     assert result['open_issues_count'] == 15
     assert result['tags'] == ['v1.2.0', 'v1.1.3']
     assert result['latest_tag'] == 'v1.2.0'
+    assert result['sources'] == [
+        'https://api.github.com/repos/mopidy/mopidy-spotify',
+        'https://api.github.com/repos/mopidy/mopidy-spotify/tags',
+    ]
 
 
 def test_add_github_repo_without_input():
@@ -136,6 +141,7 @@ def test_add_pypi_info_with_failing_service():
 
     assert result['id'] == 'Mopidy-Spotify'
     assert result['url'] == 'https://pypi.python.org/pypi/Mopidy-Spotify'
+    assert result['sources'] == []
 
 
 @responses.activate
@@ -193,6 +199,9 @@ def test_add_pypi_info_with_working_service():
     assert result['requires_dist'] == ['Pykka (>=1.1)', 'Mopidy (>=0.18)']
     assert result['has_wheel'] is True
     assert result['releases'] == ['1.2.0', '1.1.1', '1.1.0']
+    assert result['sources'] == [
+        'https://pypi.python.org/pypi/Mopidy-Spotify/json',
+    ]
 
 
 def test_add_pypi_info_without_input():
@@ -213,6 +222,7 @@ def test_add_aur_info_with_failing_service():
     assert result['id'] == 'mopidy-spotify'
     assert result['url'] == (
         'https://aur.archlinux.org/packages/mopidy-spotify/')
+    assert result['sources'] == []
 
 
 @responses.activate
@@ -250,6 +260,9 @@ def test_add_aur_info_with_working_service():
     assert result['maintainer'] == 'AlexandrePTJ'
     assert result['created_at'] == '2013-10-28T13:24:18Z'
     assert result['updated_at'] == '2014-07-21T12:39:00Z'
+    assert result['sources'] == [
+        'https://aur.archlinux.org/rpc.php?type=info&arg=mopidy-spotify',
+    ]
 
 
 def test_add_aur_info_without_input():
