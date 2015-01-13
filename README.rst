@@ -2,11 +2,11 @@
 Mopidy-Packages
 ***************
 
-.. image:: https://travis-ci.org/mopidy/mopidy-packages.png?branch=master
+.. image:: https://img.shields.io/travis/mopidy/mopidy-packages/develop.svg?style=flat
     :target: https://travis-ci.org/mopidy/mopidy-packages
     :alt: Travis CI build status
 
-.. image:: https://coveralls.io/repos/mopidy/mopidy-packages/badge.png?branch=master
+.. image:: https://img.shields.io/coveralls/mopidy/mopidy-packages/develop.svg?style=flat
    :target: https://coveralls.io/r/mopidy/mopidy-packages?branch=master
    :alt: Test coverage
 
