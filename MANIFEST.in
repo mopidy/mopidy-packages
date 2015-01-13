@@ -1,0 +1,13 @@
+include *.py
+include *.txt
+include LICENSE
+include MANIFEST.in
+include Procfile
+include tox.ini
+
+recursive-include data *
+
+recursive-include schemas *
+
+recursive-include tests *.py
+recursive-include tests/data *
