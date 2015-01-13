@@ -90,7 +90,7 @@ class Project(Model):
     DATA_DIR = ROOT_DIR / 'data' / 'projects'
     DATA_GLOB = '*/project.json'
     DATA_FORMAT = '%s/project.json'
-    SCHEMA_FILE = ROOT_DIR / 'schemas' / 'projects.schema.json'
+    SCHEMA_FILE = ROOT_DIR / 'schemas' / 'project.schema.json'
 
     _enrichers = {}
 
