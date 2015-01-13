@@ -1,8 +1,8 @@
 import datetime
+import distutils.version
 import json
 import logging
 import pathlib
-from distutils import version
 
 import jsonschema
 
@@ -162,7 +162,7 @@ def get_github_tags(id):
     for tag_obj in response.json():
         tag = tag_obj['name']
         try:
-            version.StrictVersion(tag.lstrip('v'))
+            distutils.version.StrictVersion(tag.lstrip('v'))
         except ValueError:
             continue
         else:
@@ -312,3 +312,34 @@ def unix_to_iso(unix):
         datetime.datetime
         .utcfromtimestamp(unix)
         .strftime('%Y-%m-%dT%H:%M:%SZ'))
+
+
+@Project.enricher('apt')
+def add_apt_info(data):
+    id = data['distribution'].get('apt')
+    if id is None:
+        return
+
+    result = {
+        'id': id,
+        'sources': [],
+    }
+
+    api_url = 'http://sources.debian.net/api/src/%s/' % id
+    response = requests.get(api_url)
+    if response.status_code != 200:
+        return result
+
+    apt = response.json()
+    if 'error' in apt:
+        return result
+
+    result['sources'].append(api_url)
+
+    result['suites'] = {}
+    for version in apt['versions']:
+        for suite in version['suites']:
+            result['suites'].setdefault(suite, {})
+            result['suites'][suite]['version'] = version['version']
+
+    return result

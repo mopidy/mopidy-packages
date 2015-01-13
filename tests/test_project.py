@@ -267,3 +267,78 @@ def test_add_aur_info_with_working_service():
 
 def test_add_aur_info_without_input():
     assert models.add_aur_info({'distribution': {}}) is None
+
+
+@responses.activate
+def test_add_apt_info_with_failing_service():
+    responses.add(
+        responses.GET, 'http://sources.debian.net/api/src/mopidy-spotify/',
+        status=404)
+
+    data = {'distribution': {'apt': 'mopidy-spotify'}}
+
+    result = models.add_apt_info(data)
+
+    assert result['id'] == 'mopidy-spotify'
+    assert result['sources'] == []
+
+
+@responses.activate
+def test_add_apt_info_with_unknown_package():
+    responses.add(
+        responses.GET, 'http://sources.debian.net/api/src/mopidy-spotify/',
+        body=json.dumps({'error': 404}),
+        status=200, content_type='application/json')
+
+    data = {'distribution': {'apt': 'mopidy-spotify'}}
+
+    result = models.add_apt_info(data)
+
+    assert result['id'] == 'mopidy-spotify'
+    assert result['sources'] == []
+
+
+@responses.activate
+def test_add_apt_info_with_working_service():
+    responses.add(
+        responses.GET, 'http://sources.debian.net/api/src/mopidy-spotify/',
+        body=json.dumps({
+            'package': 'mopidy-spotify',
+            'versions': [
+                {
+                    'suites': ['jessie', 'sid'],
+                    'version': '1.2.0-1',
+                    'area': 'contrib',
+                },
+                {
+                    'suites': ['wheezy'],
+                    'version': '1.1.0-1',
+                    'area': 'contrib',
+                },
+            ],
+        }),
+        status=200, content_type='application/json')
+
+    data = {'distribution': {'apt': 'mopidy-spotify'}}
+
+    result = models.add_apt_info(data)
+
+    assert result['id'] == 'mopidy-spotify'
+    assert result['suites'] == {
+        'jessie': {
+            'version': '1.2.0-1',
+        },
+        'sid': {
+            'version': '1.2.0-1',
+        },
+        'wheezy': {
+            'version': '1.1.0-1',
+        }
+    }
+    assert result['sources'] == [
+        'http://sources.debian.net/api/src/mopidy-spotify/',
+    ]
+
+
+def test_add_apt_info_without_input():
+    assert models.add_apt_info({'distribution': {}}) is None
