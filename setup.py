@@ -25,6 +25,7 @@ setup(
     install_requires=[
         'setuptools',
         'Flask',
+        'click',
         'jsonschema',
         'natsort',
         'requests',
@@ -32,7 +33,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'mopidy-packages = mopidy_packages.__main__:main',
+            'mopidy-packages = mopidy_packages.cli:cli',
         ],
     },
     classifiers=[

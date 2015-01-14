@@ -1,12 +1,9 @@
-import os
-
 import flask
 
 from mopidy_packages import models
 
 
 app = flask.Flask(__name__)
-app.config['DEBUG'] = 'DEBUG' in os.environ
 
 api_endpoints = []
 
