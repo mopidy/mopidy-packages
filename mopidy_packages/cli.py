@@ -6,7 +6,7 @@ import click
 
 import flask_frozen
 
-from mopidy_packages import web
+from mopidy_packages import web, web_static
 
 
 @click.group()
@@ -25,9 +25,22 @@ def serve(host, port, debug):
 
 
 @cli.command()
+@click.option('--host', default='127.0.0.1', help='Host to bind to')
+@click.option('--port', default=5000, help='Port to bind to')
+@click.option('--debug', default=False, help='Debug mode', is_flag=True)
 @click.argument(
-    'dest',
-    default='_site',
+    'dest', default='_site',
+    type=click.Path(file_okay=False, dir_okay=True, resolve_path=True))
+def serve_static(host, port, debug, dest):
+    """Run web server with static data from `build` command."""
+
+    web_static.app.config['SITE_DIR'] = dest
+    web_static.app.run(host=host, port=port, debug=debug)
+
+
+@cli.command()
+@click.argument(
+    'dest', default='_site',
     type=click.Path(file_okay=False, dir_okay=True, resolve_path=True))
 def build(dest):
     """Build static API site.
