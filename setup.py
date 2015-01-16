@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import re
+
 from setuptools import find_packages, setup
 
 
@@ -23,13 +24,14 @@ setup(
     zip_safe=False,
     include_package_data=True,
     install_requires=[
-        'setuptools',
         'Flask',
+        'Frozen-Flask',
         'click',
         'jsonschema',
         'natsort',
         'requests',
         'rfc3987',
+        'setuptools',
     ],
     entry_points={
         'console_scripts': [

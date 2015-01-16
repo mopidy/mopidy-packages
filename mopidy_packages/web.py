@@ -19,7 +19,7 @@ def index():
     return flask.redirect(flask.url_for('list_api_endpoints'))
 
 
-@app.route('/api')
+@app.route('/api/')
 def list_api_endpoints():
     url_rules = {f.endpoint: f.rule for f in app.url_map.iter_rules()}
 
@@ -33,7 +33,7 @@ def list_api_endpoints():
 
 
 @api_endpoint
-@app.route('/api/people')
+@app.route('/api/people/')
 def list_people():
     """Returns a list of people in the Mopidy community"""
 
@@ -42,16 +42,19 @@ def list_people():
     except models.ModelException as exc:
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
+    for person in people:
+        person['url'] = flask.url_for('get_person', id=person['id'])
+
     return flask.jsonify(people=people)
 
 
 @api_endpoint
-@app.route('/api/people/<name>')
-def get_person(name):
+@app.route('/api/people/<id>.json')
+def get_person(id):
     """Returns detailed information about a specific person"""
 
     try:
-        person = models.Person(id=name)
+        person = models.Person(id=id)
     except models.ModelException as exc:
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
@@ -64,7 +67,7 @@ def get_person(name):
 
 
 @api_endpoint
-@app.route('/api/projects')
+@app.route('/api/projects/')
 def list_projects():
     """Returns a list of projects in the Mopidy ecosystem"""
 
@@ -73,16 +76,19 @@ def list_projects():
     except models.ModelException as exc:
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
+    for project in projects:
+        project['url'] = flask.url_for('get_project', id=project['id'])
+
     return flask.jsonify(projects=projects)
 
 
 @api_endpoint
-@app.route('/api/projects/<name>')
-def get_project(name):
+@app.route('/api/projects/<id>.json')
+def get_project(id):
     """Returns detailed information about a specific project"""
 
     try:
-        project = models.Project(id=name)
+        project = models.Project(id=id)
     except models.ModelException as exc:
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
