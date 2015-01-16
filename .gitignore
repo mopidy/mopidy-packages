@@ -3,5 +3,6 @@
 .coverage
 .tox/
 __pycache__/
+_site/
 dist/
 xunit-*.xml
