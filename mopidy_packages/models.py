@@ -76,6 +76,9 @@ class Model:
                 obj = obj[part]
             obj[last] = enricher(self.data)
 
+        self.data['updated_at'] = datetime.datetime.utcnow().strftime(
+            '%Y-%m-%dT%H:%M:%SZ')
+
 
 class Person(Model):
     DATA_DIR = ROOT_DIR / 'data' / 'people'

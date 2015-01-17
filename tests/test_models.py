@@ -44,11 +44,13 @@ def test_person_enrich():
     person._enrichers = {'github': models.add_github_profile}
 
     assert person.data['profiles']['github'] == 'jodal'
+    assert 'updated_at' not in person.data
 
     person.enrich()
 
     assert person.data['github']['username'] == 'jodal'
     assert person.data['github']['url'] == 'https://github.com/jodal'
+    assert 'updated_at' in person.data
 
 
 def test_project_with_id():
