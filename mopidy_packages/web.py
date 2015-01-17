@@ -49,7 +49,7 @@ def list_people():
 
 
 @api_endpoint
-@app.route('/api/people/<id>.json')
+@app.route('/api/people/<id>/')
 def get_person(id):
     """Returns detailed information about a specific person"""
 
@@ -83,7 +83,7 @@ def list_projects():
 
 
 @api_endpoint
-@app.route('/api/projects/<id>.json')
+@app.route('/api/projects/<id>/')
 def get_project(id):
     """Returns detailed information about a specific project"""
 

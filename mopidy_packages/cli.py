@@ -58,10 +58,13 @@ def build(dest):
 
     try:
         web.app.config['FREEZER_DESTINATION'] = str(build_path)
+        web.app.config['FREEZER_IGNORE_MIMETYPE_WARNINGS'] = True
         freezer = flask_frozen.Freezer(web.app)
         freezer.freeze()
 
-        shutil.rmtree(str(dest_path))
-        build_path.replace(dest_path)
+        if dest_path.exists():
+            shutil.rmtree(str(dest_path))
+        shutil.move(str(build_path), str(dest_path))
     finally:
-        shutil.rmtree(str(build_path), ignore_errors=True)
+        if build_path.exists():
+            shutil.rmtree(str(build_path))

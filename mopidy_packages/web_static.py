@@ -21,15 +21,3 @@ def dir(path):
     with file_path.open('r') as fh:
         return flask.Response(
             response=fh.read(), status=200, mimetype='application/json')
-
-
-@app.route('/<path:path>.json')
-def json(path):
-    file_path = pathlib.Path(app.config['SITE_DIR']) / ('%s.json' % path)
-
-    if not file_path.exists():
-        flask.abort(404)
-
-    with file_path.open('r') as fh:
-        return flask.Response(
-            response=fh.read(), status=200, mimetype='application/json')
