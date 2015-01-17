@@ -43,7 +43,8 @@ def list_people():
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
     for person in people:
-        person['url'] = flask.url_for('get_person', id=person['id'])
+        person['url'] = flask.url_for(
+            'get_person', id=person['id'], _external=True)
 
     return flask.jsonify(people=people)
 
@@ -77,7 +78,8 @@ def list_projects():
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
     for project in projects:
-        project['url'] = flask.url_for('get_project', id=project['id'])
+        project['url'] = flask.url_for(
+            'get_project', id=project['id'], _external=True)
 
     return flask.jsonify(projects=projects)
 
