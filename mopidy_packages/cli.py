@@ -1,5 +1,6 @@
 import pathlib
 import shutil
+import sys
 import tempfile
 
 import click
@@ -33,6 +34,10 @@ def serve_ondemand(host, port, debug):
     type=click.Path(file_okay=False, dir_okay=True, resolve_path=True))
 def serve_static(host, port, debug, dest):
     """Run web server with static API site."""
+
+    if not pathlib.Path(dest).exists():
+        click.echo('No site found at %s. You must build it first.' % dest)
+        sys.exit(1)
 
     web_static.app.config['SITE_DIR'] = dest
     web_static.app.run(host=host, port=port, debug=debug)
