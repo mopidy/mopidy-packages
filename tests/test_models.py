@@ -1,5 +1,7 @@
 import pathlib
 
+import responses
+
 from mopidy_packages import models
 
 
@@ -39,6 +41,7 @@ def test_person_with_invalid_data_file():
         assert 'Invalid JSON structure' in str(exc)
 
 
+@responses.activate
 def test_person_enrich():
     person = models.Person(id='jodal')
     person._enrichers = {'github': models.add_github_profile}
