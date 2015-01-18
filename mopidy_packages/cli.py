@@ -15,16 +15,16 @@ def cli():
     pass
 
 
-@cli.command()
+@cli.command('serve-ondemand')
 @click.option('--host', default='127.0.0.1', help='Host to bind to')
 @click.option('--port', default=5000, help='Port to bind to')
 @click.option('--debug', default=False, help='Debug mode', is_flag=True)
-def serve(host, port, debug):
+def serve_ondemand(host, port, debug):
     """Run web server with on-demand data fetching."""
     web.app.run(host=host, port=port, debug=debug)
 
 
-@cli.command()
+@cli.command('serve-static')
 @click.option('--host', default='127.0.0.1', help='Host to bind to')
 @click.option('--port', default=5000, help='Port to bind to')
 @click.option('--debug', default=False, help='Debug mode', is_flag=True)
@@ -32,17 +32,17 @@ def serve(host, port, debug):
     'dest', default='_site',
     type=click.Path(file_okay=False, dir_okay=True, resolve_path=True))
 def serve_static(host, port, debug, dest):
-    """Run web server with static data from `build` command."""
+    """Run web server with static API site."""
 
     web_static.app.config['SITE_DIR'] = dest
     web_static.app.run(host=host, port=port, debug=debug)
 
 
-@cli.command()
+@cli.command('build-static')
 @click.argument(
     'dest', default='_site',
     type=click.Path(file_okay=False, dir_okay=True, resolve_path=True))
-def build(dest):
+def build_static(dest):
     """Build static API site.
 
     Fetches updated API data and saves to the DEST directory.
