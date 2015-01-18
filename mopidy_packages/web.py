@@ -78,8 +78,8 @@ def list_projects():
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
     for project in projects:
-        project['url'] = flask.url_for(
-            'get_project', id=project['id'], _external=True)
+        link_project(project)
+        link_maintainers(project)
 
     return flask.jsonify(projects=projects)
 
@@ -98,5 +98,18 @@ def get_project(id):
         flask.abort(404)
 
     project.enrich()
+    link_project(project.data)
+    link_maintainers(project.data)
 
     return flask.jsonify(project.data)
+
+
+def link_project(project_data):
+    project_data['url'] = flask.url_for(
+        'get_project', id=project_data['id'], _external=True)
+
+
+def link_maintainers(project_data):
+    project_data['maintainers'] = {
+        person_id: flask.url_for('get_person', id=person_id, _external=True)
+        for person_id in project_data['maintainers']}
