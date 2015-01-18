@@ -43,8 +43,7 @@ def list_people():
         return flask.Response(str(exc), status=500, content_type='text/plain')
 
     for person in people:
-        person['url'] = flask.url_for(
-            'get_person', id=person['id'], _external=True)
+        link_person(person)
 
     return flask.jsonify(people=people)
 
@@ -62,6 +61,7 @@ def get_person(id):
     if person.data is None:
         flask.abort(404)
 
+    link_person(person.data)
     person.enrich()
 
     return flask.jsonify(person.data)
@@ -102,6 +102,11 @@ def get_project(id):
     link_maintainers(project.data)
 
     return flask.jsonify(project.data)
+
+
+def link_person(person_data):
+    person_data['url'] = flask.url_for(
+        'get_person', id=person_data['id'], _external=True)
 
 
 def link_project(project_data):
