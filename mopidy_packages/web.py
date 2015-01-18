@@ -100,7 +100,3 @@ def get_project(id):
     project.enrich()
 
     return flask.jsonify(project.data)
-
-
-if __name__ == '__main__':
-    app.run()
