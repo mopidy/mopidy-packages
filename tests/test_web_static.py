@@ -16,8 +16,7 @@ def test_path_that_does_not_exist(static_app):
 
 def test_path_returns_correct_file_as_json(static_app, tmpdir):
     index_file = tmpdir.mkdir('foo').join('index.html')
-    with index_file.open('w') as fh:
-        json.dump({'foo': 'bar'}, fh)
+    index_file.write(json.dumps({'foo': 'bar'}))
 
     response = static_app.get('/foo/')
 
